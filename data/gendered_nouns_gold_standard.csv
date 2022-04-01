@@ -1,0 +1,54 @@
+category,masculine,feminine,neutral
+family,brother,sister,sibling
+family,dad,mum,
+family,dad,mom,
+family,daddy,mummy,
+family,daddy,mommy,
+family,father,mother,parent
+family,father-in-law,mother-in-law,parent-in-law
+family,fiance,fiancee,betrothed
+family,grandfather,grandmother,grandparent
+family,grandson,granddaughter,grandchild
+family,husband,wife,spouse
+family,nephew,niece,
+family,son,daughter,child
+family,son-in-law,daughter-in-law,child-in-law
+family,step-father,step-mother,step-parent
+family,stepfather,stepmother,stepparent
+family,uncle,aunt,
+family,widower,widow,
+misc,bachelor,spinster,single person
+misc,boy,girl,child
+misc,boyfriend,girlfriend,partner
+misc,gentleman,lady,
+misc,groom,bride,
+misc,lad,lass,
+misc,male,female,
+misc,man,woman,person
+misc,manservant,maidservant,servant
+misc,steward,stewardess,attendant
+misc,swain,nymph,spirit
+misc,wizard,witch,
+occupation,businessman,businesswoman,business person
+occupation,chairman,chairwoman,chairperson
+occupation,fireman,firewoman,fire fighter
+occupation,headmaster,headmistress,head teacher
+occupation,landlord,landlady,renter
+occupation,milkman,milkmaid,
+occupation,policeman,policewoman,police officer
+occupation,salesman,saleswoman,salesperson
+occupation,waiter,waitress,server
+religion,friar,nun,
+religion,monk,nun,
+title,Mr.,Mrs.,Mx.
+title,baron,baroness,
+title,count,countess,
+title,czar,czarina,
+title,duke,duchess,
+title,earl,countess,
+title,emperor,empress,ruler
+title,king,queen,
+title,prince,princess,
+title,signor,signora,
+title,sir,madam,
+title,viscount,viscountess,
