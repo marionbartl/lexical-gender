@@ -16,9 +16,6 @@ from utils.general import is_word, conflict_resolution_3
 from utils.wiki_utils import parse_wiki
 
 
-# import neuralcoref
-
-
 def edit_distance(str1, str2):
     """source: https://www.codespeedy.com/minimum-edit-distance-in-python/
     returns number of operations needed to turn str1 into str2"""
@@ -232,8 +229,7 @@ if __name__ == '__main__':
 
         print('This took {0:.2f} minutes'.format((et - st) / 60))
 
-    elif args.gold:  # GOLD STANDARD EVALUATION
-        st = time.time()
+    elif args.gold:  # GOLD STANDARD EVALUATION AND GRID SEARCH
 
         colnames_gold = ['masculine', 'feminine', 'neutral']
         gender_labels = ['masc', 'fem', 'neutral']
@@ -268,17 +264,16 @@ if __name__ == '__main__':
         # gold_and_preds['comb'] = [conflict_resolution_3(a, b, c) for a, b, c
         #                           in zip([gold_and_preds.merriam, gold_and_preds.wordnet, gold_and_preds.dictcom])]
 
-        et = time.time()
-        print('This took {0:.2f} minutes'.format((et - st) / 60))
-
         for abbrev, info in online_dicts.items():
             print(abbrev, info['best_acc'], info['best_params'])
 
-        param_df = pd.DataFrame(param_list)
-        param_df.to_csv(args.out_path, index=False)
+        # online_dicts has the best performing parameters for all the dictionaries
+        with open(args.out_path, 'w') as f:
+            json.dump(online_dicts, f, indent=4)
 
-        # with open(args.out_path, 'w') as f:
-        #     json.dump(online_dicts, f, indent=4)
+        # print results of grid search (all the different parameter combinations) to file
+        param_df = pd.DataFrame(param_list)
+        param_df.to_csv('results/grid_search_results.csv', index=False)
 
     else:
         print('You haven\'t given any arguments. I don\'t know what to do.')

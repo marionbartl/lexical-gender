@@ -98,7 +98,7 @@ if __name__ == '__main__':
     # words are all in one column
     # random_data = pd.read_csv('results/lexical_gender_femmasc_wiki150.csv', header=0)
 
-    # gold_data = pd.read_csv('results/lexical_gender_gold_labelled_long.csv', header=0)
+    # gold_data = pd.read_csv('results/gendered_nouns_gold_standard_long_labelled.csv', header=0)
     #
     # for mw, wn in zip(gold_data.mw_label, gold_data.wn_label):
     #     label = conflict_resolution_specific(mw, wn)
@@ -157,7 +157,7 @@ if __name__ == '__main__':
     # ------------------------------------------------
 
     # LEXICAL GENDER PREDICTION FOR GOLD STANDARD FILE
-    filename = 'results/lexical_gender_femmasc_wiki1000_majority.csv'
+    filename = 'results/gendered_nouns_wiki1000_sample_majority.csv'
     # filename = 'data/gendered_nouns_gold_standard_long.csv'
 
     gold_data = pd.read_csv(filename, header=0)
@@ -235,14 +235,14 @@ if __name__ == '__main__':
     # COMPARISON OF MINE AND SUSAN'S (AND RYAN's) LABELS + majority vote
 
     # read everything in and make sure it is ordered to avoid labeling mistakes
-    # wiki_m = pd.read_csv('results/lexical_gender_femmasc_wiki1000_marion.csv', header=0)
+    # wiki_m = pd.read_csv('results/gendered_nouns_wiki1000_sample_marion.csv', header=0)
     # wiki_m = wiki_m.sort_values('word').reset_index(drop=True)
-    # wiki_s = pd.read_csv('results/lexical_gender_femmasc_wiki1000_susan.csv', header=0)
+    # wiki_s = pd.read_csv('results/gendered_nouns_wiki1000_sample_susan.csv', header=0)
     # wiki_s = wiki_s.sort_values('word').reset_index(drop=True)
-    # wiki_r = pd.read_csv('results/lexical_gender_femmasc_wiki1000_ryan.csv', header=0)
+    # wiki_r = pd.read_csv('results/gendered_nouns_wiki1000_sample_ryan.csv', header=0)
     # wiki_r = wiki_r.sort_values('word').reset_index(drop=True)
     #
-    # wiki = pd.read_csv('results/lexical_gender_femmasc_wiki1000.csv', header=0)
+    # wiki = pd.read_csv('results/gendered_nouns_wiki1000_sample.csv', header=0)
     # wiki = wiki.sort_values('word').reset_index(drop=True)
     #
     # assert len(wiki_m) == len(wiki_s) == len(wiki_r) == len(wiki)
@@ -271,7 +271,7 @@ if __name__ == '__main__':
     # fk = fleiss_kappa(label_mat)
     # print('Fleiss\'s kappa:', round(fk, 3))
     #
-    # wiki.to_csv('results/lexical_gender_femmasc_wiki1000_majority.csv', index=False)
+    # wiki.to_csv('results/gendered_nouns_wiki1000_sample_majority.csv', index=False)
     #
     # # Inter-annotator disagreements:
     # disagree = []
@@ -352,7 +352,7 @@ if __name__ == '__main__':
 
     # POST-HOC LABELING OF WIKIPEDIA DATA after conf_res_3 was changed
 
-    # wiki = pd.read_csv('results/lexical_gender_femmasc_wiki1000_majority.csv', header=0)
+    # wiki = pd.read_csv('results/gendered_nouns_wiki1000_sample_majority.csv', header=0)
     # print(wiki.comb_label.value_counts())
     #
     # new_comb_labels = []?
@@ -363,4 +363,4 @@ if __name__ == '__main__':
     # wiki['comb_label'] = new_comb_labels
     #
     # print(wiki.comb_label.value_counts())
-    # wiki.to_csv('results/lexical_gender_femmasc_wiki1000_majority.csv', index=False)
+    # wiki.to_csv('results/gendered_nouns_wiki1000_sample_majority.csv', index=False)

@@ -36,7 +36,7 @@ def wiki_corpus(filename, n_articles=50):
         len_original_corpus = len(corpus)
     else:
         new_corpus = input("Your filename does not exist. "
-                           "Do you want to create a new corpus at the location "+filename+" ? (y/n)")
+                           "Do you want to create a new corpus at the location "+filename+" ? (y/n) ")
         if new_corpus == 'y':
             len_original_corpus = 0
             corpus = dict()

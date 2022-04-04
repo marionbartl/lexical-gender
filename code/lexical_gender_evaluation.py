@@ -31,7 +31,7 @@ if __name__ == '__main__':
     # only get NN nouns
     # wiki_data = wiki_data[wiki_data['tag'] == 'NN']
 
-    gold_data = pd.read_csv('results/lexical_gender_gold_labelled_long.csv', header=0)
+    gold_data = pd.read_csv('results/gendered_nouns_gold_standard_long_labelled.csv', header=0)
 
     print('OVERLAP ANALYSIS\n')
 
