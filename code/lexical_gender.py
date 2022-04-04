@@ -154,7 +154,7 @@ def parse_arguments():
     group.add_argument('--gold', help='gold standard CSV-file (masc, fem & neutral columns)')
     group.add_argument('--wiki', help='wikipedia corpus file in JSON format')
 
-    parser.add_argument('--out_path', help='path to .CSV outfile for found words from wikipedia', required=False)
+    parser.add_argument('--file', help='path to .CSV outfile for found words from wikipedia', required=False)
 
     parser.add_argument('--heur', help='whether or not to use heuristics for lexical gender algorithm', required=False,
                         action="store_true")
@@ -174,7 +174,7 @@ if __name__ == '__main__':
 
     if args.test:  # TEST EVALUATION
 
-        test_words = ['contraceptives','babysitter','fire fighter']
+        test_words = ['contraceptives', 'babysitter', 'fire fighter']
 
         for test_word in test_words:
             print(check_dictionary(test_word, 'mw', ))
@@ -223,10 +223,20 @@ if __name__ == '__main__':
 
         found_words = pd.DataFrame(rows, columns=['word', 'tag', 'wn_label', 'mw_label', 'dc_label', 'comb_label'])
         print(found_words.to_markdown())
-        found_words.to_csv(args.out_path, index=False, na_rep='not_found')
-        print('Number of sentences in wikicorpus:', no_sents)
-        et = time.time()
+        found_words.to_csv(args.file, index=False, na_rep='not_found')
+        print('Number of sentences in Wiki1000:', no_sents)
 
+        print('Number of words found in Wiki1000:', len(found_words))
+
+        # only get the ones for which either of the three labels is gendered
+        sample = found_words[found_words.wn_label.isin(['fem', 'masc'])
+                             | found_words.mw_label.isin(['fem', 'masc'])
+                             | found_words.dc_label.isin(['fem', 'masc'])]
+
+        print('Number of words found in Wiki1000 sample:', len(sample))
+        sample.to_csv('eval/gendered_nouns_wiki1000_sample.csv', index=False, na_rep='not_found')
+
+        et = time.time()
         print('This took {0:.2f} minutes'.format((et - st) / 60))
 
     elif args.gold:  # GOLD STANDARD EVALUATION AND GRID SEARCH
@@ -268,7 +278,7 @@ if __name__ == '__main__':
             print(abbrev, info['best_acc'], info['best_params'])
 
         # online_dicts has the best performing parameters and extracted definitions for all the dictionaries
-        # with open(args.out_path, 'w') as f:
+        # with open(args.file, 'w') as f:
         #     json.dump(online_dicts, f, indent=4)
 
         # print results of grid search (all the different parameter combinations) to file
