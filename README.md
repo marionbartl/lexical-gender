@@ -1,7 +1,9 @@
 # Lexical Gender Detection with Online Lexical Databases
 
-## Test for gender detection
+## Find out the gender of a given word
 ```
+from utils.dict_utils import check_dictionary
+
 check_dictionary('babysitter', 'mw')
 >> 'neutral'
 ```
