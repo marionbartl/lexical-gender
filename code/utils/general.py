@@ -128,7 +128,7 @@ def get_metrics(pred_list, labels, remove_na=False):
                 robust=True, linewidths=0.2, linecolor='darkgrey')
     plt.xlabel('predicted labels')
     plt.ylabel('true labels')
-    # plt.show()
+    plt.show()
     print()
 
     return report, label2name

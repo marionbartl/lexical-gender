@@ -58,16 +58,16 @@ def cohen_kappa(ann1, ann2):
 if __name__ == '__main__':
 
     # import annotation files and sort by word to make sure they are all in the same order
-    wiki_a1 = pd.read_csv('results/gendered_nouns_wiki1000_sample_a1.csv', header=0)
+    wiki_a1 = pd.read_csv('eval/gendered_nouns_wiki1000_sample_a1.csv', header=0)
     wiki_a1 = wiki_a1.sort_values('word').reset_index(drop=True)
 
-    wiki_a2 = pd.read_csv('results/gendered_nouns_wiki1000_sample_a2.csv', header=0)
+    wiki_a2 = pd.read_csv('eval/gendered_nouns_wiki1000_sample_a2.csv', header=0)
     wiki_a2 = wiki_a2.sort_values('word').reset_index(drop=True)
 
-    wiki_a3 = pd.read_csv('results/gendered_nouns_wiki1000_sample_a3.csv', header=0)
+    wiki_a3 = pd.read_csv('eval/gendered_nouns_wiki1000_sample_a3.csv', header=0)
     wiki_a3 = wiki_a3.sort_values('word').reset_index(drop=True)
 
-    wiki = pd.read_csv('results/gendered_nouns_wiki1000_sample.csv', header=0)
+    wiki = pd.read_csv('eval/gendered_nouns_wiki1000_sample.csv', header=0)
     wiki = wiki.sort_values('word').reset_index(drop=True)
 
     # check that no rows got lost anywhere in the process
@@ -83,14 +83,12 @@ if __name__ == '__main__':
     # use the same conflict resolution function from combined label to get the majority vote over
     # all annotator labels
     for idx, row in wiki_a1.iterrows():
-        ml, sl, rl = row.true_label, wiki_a2.true_label[idx], wiki_a3.true_label[idx]
-        # print(ml, sl, rl, ':', conflict_resolution_3(ml, sl, rl))
-        wiki['true_label'][idx] = conflict_resolution_3(ml, sl, rl)
-        # majority_labels.append(conflict_resolution_3(ml, sl, rl))
+        a1_label, a2_label, a3_label = row.true_label, wiki_a2.true_label[idx], wiki_a3.true_label[idx]
+        wiki['true_label'][idx] = conflict_resolution_3(a1_label, a2_label, a3_label)
         label_counts = [0 for i, _ in enumerate(labels)]
-        label_counts[label2id[ml]] += 1
-        label_counts[label2id[sl]] += 1
-        label_counts[label2id[rl]] += 1
+        label_counts[label2id[a1_label]] += 1
+        label_counts[label2id[a2_label]] += 1
+        label_counts[label2id[a3_label]] += 1
         l_mat.append(label_counts)
 
     # compute fleiss's kappa
@@ -105,11 +103,12 @@ if __name__ == '__main__':
 
     for i, row in wiki_a1.iterrows():
         assert row.word == wiki_a2.word[i] == wiki_a3.word[i]
-        sl = wiki_a2.true_label[i]
-        rl = wiki_a3.true_label[i]
-        if row.true_label != sl or row.true_label != rl:
-            disagree.append({'word': row.word, 'marion': row.true_label, 'susan': sl, 'ryan': rl})
-            # print('word: {}\t marion: {}\t susan: {}\t ryan: {}'.format(row.word, row.true_label, sl, rl))
+        a2_label = wiki_a2.true_label[i]
+        a3_label = wiki_a3.true_label[i]
+        if row.true_label != a2_label or row.true_label != a3_label:
+            disagree.append({'word': row.word,
+                             'annotator 1': row.true_label, 'annotator 2': a2_label, 'annotator 3': a3_label})
 
     disagree = pd.DataFrame(disagree)
-    disagree.to_csv('results/inter_annotator_disagreements.csv', index=False)
+    print('The annotators disagreed on', len(disagree), 'words.')
+    disagree.to_csv('eval/inter_annotator_disagreements.csv', index=False)

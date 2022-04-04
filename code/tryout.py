@@ -102,18 +102,18 @@ if __name__ == '__main__':
     # ------------------------------------------------
 
     # # CODE TO MAKE LONG DATAFRAME OUT OF GOLD STANDARD FILE
-    # gold_data = pd.read_csv('data/gendered_nouns_gold_standard.csv', header=0)
-    #
-    # male = list(zip(gold_data.masculine, ['masc']*len(gold_data.masculine)))
-    # female = list(zip(gold_data.feminine, ['fem']*len(gold_data.masculine)))
-    #
-    # neut = gold_data.neutral.dropna()
-    # neutral = list(zip(neut, ['neutral']*len(neut)))
-    #
-    # reordered_gold = pd.DataFrame(male+female+neutral, columns=['word', 'true_label'])
-    #
-    # print(reordered_gold.to_markdown())
-    # reordered_gold.to_csv('data/gendered_nouns_gold_standard_long.csv', index=False)
+    gold_data = pd.read_csv('data/gendered_nouns_gold_standard.csv', header=0)
+
+    male = list(zip(gold_data.masculine, ['masc']*len(gold_data.masculine)))
+    female = list(zip(gold_data.feminine, ['fem']*len(gold_data.masculine)))
+
+    neut = gold_data.neutral.dropna()
+    neutral = list(zip(neut, ['neutral']*len(neut)))
+
+    reordered_gold = pd.DataFrame(male+female+neutral, columns=['word', 'true_label'])
+
+    print(reordered_gold.to_markdown())
+    reordered_gold.to_csv('data/gendered_nouns_gold_standard_long.csv', index=False)
 
     # ------------------------------------------------
 
@@ -150,30 +150,6 @@ if __name__ == '__main__':
     #     print(cluster.main.text)
     #     print(cluster.mentions)
 
-    # ------------------------------------------------
-
-    # LEXICAL GENDER PREDICTION FOR GOLD STANDARD FILE
-    # filename = 'results/gendered_nouns_wiki1000_sample_majority.csv'
-    # # filename = 'data/gendered_nouns_gold_standard_long.csv'
-    #
-    # gold_data = pd.read_csv(filename, header=0)
-    #
-    # print('merriam')
-    # mw_labels = [check_dictionary(word, 'mw') for word in gold_data.word]
-    # print('wordnet')
-    # wn_labels = [check_dictionary(word, 'wn') for word in gold_data.word]
-    # print('dict_com')
-    # dc_labels = [check_dictionary(word, 'dc') for word in gold_data.word]
-    # comb_labels = [conflict_resolution_3(wn, mw, dc) for wn, mw, dc in zip(wn_labels, mw_labels, dc_labels)]
-    #
-    # gold_data = gold_data.assign(mw_label=mw_labels,
-    #                              wn_label=wn_labels,
-    #                              dc_label=dc_labels,
-    #                              comb_label=comb_labels)
-    #
-    # gold_data.fillna('not_found', inplace=True)
-    #
-    # gold_data.to_csv(filename, index=False)
 
     # ------------------------------------------------
 
@@ -226,64 +202,6 @@ if __name__ == '__main__':
     # print(problems[['word', 'mw_label', 'true_label']].to_markdown())
     #
     # print(get_metrics(pd.Series(mw_labels), wiki.true_label))
-
-    # ------------------------------------------------
-    # COMPARISON OF MINE AND SUSAN'S (AND RYAN's) LABELS + majority vote
-
-    # read everything in and make sure it is ordered to avoid labeling mistakes
-    # wiki_m = pd.read_csv('results/gendered_nouns_wiki1000_sample_a1.csv', header=0)
-    # wiki_m = wiki_m.sort_values('word').reset_index(drop=True)
-    # wiki_s = pd.read_csv('results/gendered_nouns_wiki1000_sample_a2.csv', header=0)
-    # wiki_s = wiki_s.sort_values('word').reset_index(drop=True)
-    # wiki_r = pd.read_csv('results/gendered_nouns_wiki1000_sample_a3.csv', header=0)
-    # wiki_r = wiki_r.sort_values('word').reset_index(drop=True)
-    #
-    # wiki = pd.read_csv('results/gendered_nouns_wiki1000_sample.csv', header=0)
-    # wiki = wiki.sort_values('word').reset_index(drop=True)
-    #
-    # assert len(wiki_m) == len(wiki_s) == len(wiki_r) == len(wiki)
-    #
-    # labels = ['masc', 'fem', 'neutral']
-    #
-    # l_mat = []
-    # wiki['true_label'] = None
-    #
-    # id2label = {i: label for i, label in enumerate(labels)}
-    # label2id = {label: i for i, label in enumerate(labels)}
-    #
-    # for idx, row in wiki_m.iterrows():
-    #     ml, sl, rl = row.true_label, wiki_s.true_label[idx], wiki_r.true_label[idx]
-    #     # print(ml, sl, rl, ':', conflict_resolution_3(ml, sl, rl))
-    #     wiki['true_label'][idx] = conflict_resolution_3(ml, sl, rl)
-    #     # majority_labels.append(conflict_resolution_3(ml, sl, rl))
-    #     label_counts = [0 for i, _ in enumerate(labels)]
-    #     label_counts[label2id[ml]] += 1
-    #     label_counts[label2id[sl]] += 1
-    #     label_counts[label2id[rl]] += 1
-    #     l_mat.append(label_counts)
-    #
-    # # compute fleiss's kappa
-    # label_mat = np.array(l_mat)
-    # fk = fleiss_kappa(label_mat)
-    # print('Fleiss\'s kappa:', round(fk, 3))
-    #
-    # wiki.to_csv('results/gendered_nouns_wiki1000_sample_majority.csv', index=False)
-    #
-    # # Inter-annotator disagreements:
-    # disagree = []
-    #
-    # for i, row in wiki_m.iterrows():
-    #     assert row.word == wiki_s.word[i] == wiki_r.word[i]
-    #     sl = wiki_s.true_label[i]
-    #     rl = wiki_r.true_label[i]
-    #     if row.true_label != sl or row.true_label != rl:
-    #         disagree.append({'word': row.word, 'marion': row.true_label, 'susan': sl, 'ryan': rl})
-    #         # print('word: {}\t marion: {}\t susan: {}\t ryan: {}'.format(row.word, row.true_label, sl, rl))
-    #
-    # disagree = pd.DataFrame(disagree)
-    # disagree.to_csv('results/inter_annotator_disagreements.csv', index=False)
-
-    # print(cohen_kappa(list(wiki_m.true_label), list(wiki_s.true_label)))
 
     # ------------------------------------------------
     # COMPARISON OF CAO's and our
@@ -361,16 +279,3 @@ if __name__ == '__main__':
     # print(wiki.comb_label.value_counts())
     # wiki.to_csv('results/gendered_nouns_wiki1000_sample_majority.csv', index=False)
 
-    # -------------------------------------------------
-
-    # save annotators
-    import json
-
-    l = list(range(1, 4))
-    annotators = {i: None for i in l}
-    annotators[1] = 'Marion Bartl'
-    annotators[2] = 'Susan Leavy'
-    annotators[3] = 'Ryan O\'Connor'
-
-    with open('eval/annotators.json', 'w', encoding='utf-8') as f:
-        json.dump(annotators, f, indent=4)

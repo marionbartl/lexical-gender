@@ -154,16 +154,16 @@ def parse_arguments():
     group.add_argument('--gold', help='gold standard CSV-file (masc, fem & neutral columns)')
     group.add_argument('--wiki', help='wikipedia corpus file in JSON format')
 
-    parser.add_argument('--out_path', help='path to .CSV outfile for found words from wikipedia', required=True)
+    parser.add_argument('--out_path', help='path to .CSV outfile for found words from wikipedia', required=False)
 
     parser.add_argument('--heur', help='whether or not to use heuristics for lexical gender algorithm', required=False,
                         action="store_true")
     parser.add_argument('--n_words', help='no_words of dictionary definition to use', required=False,
-                        default=10)
+                        default=35)
     parser.add_argument('--s_pairs', help='no of gendered seed pairs to find in dictionary definition', required=False,
                         default=5)
     parser.add_argument('--n_defs', help='no of definitions to use from dictionary', required=False,
-                        default=5)
+                        default=10)
 
     args = parser.parse_args()
     return args
@@ -174,10 +174,10 @@ if __name__ == '__main__':
 
     if args.test:  # TEST EVALUATION
 
-        test_words = ['contraceptives']
+        test_words = ['contraceptives','babysitter','fire fighter']
 
         for test_word in test_words:
-            print(check_dictionary(test_word, 'mw'))
+            print(check_dictionary(test_word, 'mw', ))
 
     elif args.wiki:  # FINDING WORDS WITH LEXICAL GENDER IN WIKIPEDIA CORPUS
         st = time.time()
@@ -242,6 +242,8 @@ if __name__ == '__main__':
         # get gold standard labels
         gold = pd.read_csv(args.gold)  # watch out for nan values in neutral list
 
+        # TRANSFORMATION INTO LONG FORMAT
+
         # turn gold labels into long format while taking care of unseen values in neutral column
         long = []
         for words, label in zip([gold.masculine, gold.feminine, gold.neutral], gender_labels):
@@ -250,30 +252,44 @@ if __name__ == '__main__':
             long += zip(words, y_true)
 
         gold_long = pd.DataFrame(long, columns=['word', 'true_label'])
-
         gold_long.to_csv('data/gendered_nouns_gold_standard_long.csv', index=False)
+
+        # GRID SEARCH
 
         # create parameter_grid
         param_grid = {'seed_pairs': [2, 3, 4, 5, 6, 7, 8],
                       'no_defs': [2, 3, 4, 5, 6, 7, 8, 9, 10],
                       'no_words': [5, 10, 15, 20, 25, 30, 35]}
 
+        print('Grid search starting')
         param_list, online_dicts = grid_search(gold_long.word, gold_long.true_label, param_grid, online_dicts)
-
-        # add combined label
-        # gold_and_preds['comb'] = [conflict_resolution_3(a, b, c) for a, b, c
-        #                           in zip([gold_and_preds.merriam, gold_and_preds.wordnet, gold_and_preds.dictcom])]
 
         for abbrev, info in online_dicts.items():
             print(abbrev, info['best_acc'], info['best_params'])
 
-        # online_dicts has the best performing parameters for all the dictionaries
-        with open(args.out_path, 'w') as f:
-            json.dump(online_dicts, f, indent=4)
+        # online_dicts has the best performing parameters and extracted definitions for all the dictionaries
+        # with open(args.out_path, 'w') as f:
+        #     json.dump(online_dicts, f, indent=4)
 
         # print results of grid search (all the different parameter combinations) to file
         param_df = pd.DataFrame(param_list)
         param_df.to_csv('results/grid_search_results.csv', index=False)
+
+        # LEXICAL GENDER PREDICTION FOR GOLD STANDARD
+
+        mw_labels = [check_dictionary(word, 'mw') for word in gold_long.word]
+        wn_labels = [check_dictionary(word, 'wn') for word in gold_long.word]
+        dc_labels = [check_dictionary(word, 'dc') for word in gold_long.word]
+        comb_labels = [conflict_resolution_3(wn, mw, dc) for wn, mw, dc in zip(wn_labels, mw_labels, dc_labels)]
+
+        gold_data = gold_long.assign(mw_label=mw_labels,
+                                     wn_label=wn_labels,
+                                     dc_label=dc_labels,
+                                     comb_label=comb_labels)
+
+        gold_data.fillna('not_found', inplace=True)
+
+        gold_data.to_csv('results/gendered_nouns_gold_standard_long_labelled.csv', index=False)
 
     else:
         print('You haven\'t given any arguments. I don\'t know what to do.')
