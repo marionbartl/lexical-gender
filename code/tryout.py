@@ -1,14 +1,10 @@
-# import pandas as pd
-# import argparse
-# import json
+# Author: Marion Bartl
+
 import numpy as np
 import pandas as pd
-# import spacy
-# import neuralcoref
 
 from utils.dict_utils import check_dictionary
-
-from utils.general import conflict_resolution_2, get_metrics, conflict_resolution_3
+from utils.general import conflict_resolution_3
 
 
 def edit_distance(str1, str2):
@@ -157,27 +153,27 @@ if __name__ == '__main__':
     # ------------------------------------------------
 
     # LEXICAL GENDER PREDICTION FOR GOLD STANDARD FILE
-    filename = 'results/gendered_nouns_wiki1000_sample_majority.csv'
-    # filename = 'data/gendered_nouns_gold_standard_long.csv'
-
-    gold_data = pd.read_csv(filename, header=0)
-
-    print('merriam')
-    mw_labels = [check_dictionary(word, 'mw') for word in gold_data.word]
-    print('wordnet')
-    wn_labels = [check_dictionary(word, 'wn') for word in gold_data.word]
-    print('dict_com')
-    dc_labels = [check_dictionary(word, 'dc') for word in gold_data.word]
-    comb_labels = [conflict_resolution_3(wn, mw, dc) for wn, mw, dc in zip(wn_labels, mw_labels, dc_labels)]
-
-    gold_data = gold_data.assign(mw_label=mw_labels,
-                                 wn_label=wn_labels,
-                                 dc_label=dc_labels,
-                                 comb_label=comb_labels)
-
-    gold_data.fillna('not_found', inplace=True)
-
-    gold_data.to_csv(filename, index=False)
+    # filename = 'results/gendered_nouns_wiki1000_sample_majority.csv'
+    # # filename = 'data/gendered_nouns_gold_standard_long.csv'
+    #
+    # gold_data = pd.read_csv(filename, header=0)
+    #
+    # print('merriam')
+    # mw_labels = [check_dictionary(word, 'mw') for word in gold_data.word]
+    # print('wordnet')
+    # wn_labels = [check_dictionary(word, 'wn') for word in gold_data.word]
+    # print('dict_com')
+    # dc_labels = [check_dictionary(word, 'dc') for word in gold_data.word]
+    # comb_labels = [conflict_resolution_3(wn, mw, dc) for wn, mw, dc in zip(wn_labels, mw_labels, dc_labels)]
+    #
+    # gold_data = gold_data.assign(mw_label=mw_labels,
+    #                              wn_label=wn_labels,
+    #                              dc_label=dc_labels,
+    #                              comb_label=comb_labels)
+    #
+    # gold_data.fillna('not_found', inplace=True)
+    #
+    # gold_data.to_csv(filename, index=False)
 
     # ------------------------------------------------
 
@@ -235,11 +231,11 @@ if __name__ == '__main__':
     # COMPARISON OF MINE AND SUSAN'S (AND RYAN's) LABELS + majority vote
 
     # read everything in and make sure it is ordered to avoid labeling mistakes
-    # wiki_m = pd.read_csv('results/gendered_nouns_wiki1000_sample_marion.csv', header=0)
+    # wiki_m = pd.read_csv('results/gendered_nouns_wiki1000_sample_a1.csv', header=0)
     # wiki_m = wiki_m.sort_values('word').reset_index(drop=True)
-    # wiki_s = pd.read_csv('results/gendered_nouns_wiki1000_sample_susan.csv', header=0)
+    # wiki_s = pd.read_csv('results/gendered_nouns_wiki1000_sample_a2.csv', header=0)
     # wiki_s = wiki_s.sort_values('word').reset_index(drop=True)
-    # wiki_r = pd.read_csv('results/gendered_nouns_wiki1000_sample_ryan.csv', header=0)
+    # wiki_r = pd.read_csv('results/gendered_nouns_wiki1000_sample_a3.csv', header=0)
     # wiki_r = wiki_r.sort_values('word').reset_index(drop=True)
     #
     # wiki = pd.read_csv('results/gendered_nouns_wiki1000_sample.csv', header=0)
@@ -364,3 +360,17 @@ if __name__ == '__main__':
     #
     # print(wiki.comb_label.value_counts())
     # wiki.to_csv('results/gendered_nouns_wiki1000_sample_majority.csv', index=False)
+
+    # -------------------------------------------------
+
+    # save annotators
+    import json
+
+    l = list(range(1, 4))
+    annotators = {i: None for i in l}
+    annotators[1] = 'Marion Bartl'
+    annotators[2] = 'Susan Leavy'
+    annotators[3] = 'Ryan O\'Connor'
+
+    with open('eval/annotators.json', 'w', encoding='utf-8') as f:
+        json.dump(annotators, f, indent=4)
