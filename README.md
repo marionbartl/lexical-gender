@@ -6,6 +6,16 @@ at the ACL Conference 2022 in Dublin. BibTeX citation to follow.
 
 ## The Basics
 ### The basic function
+
+The `check_dictionary` functions takes a word and the name of a dictionary and returns the word's lexical gender label
+based on the presence of gendered words in its dictionary definition.
+Additional parameters are 
+- `heuristics`, which determines whether to use suffix information of the given word, 
+- `seed_pairs`, the number of gendered word pairs to search for in the dictionary definition, 
+- `no_words`, the maximum number of words to use from each definition, and
+- `no_defs`, the maximum number of definitions to use from the word's page in the dictionary.
+
+
 ```python
 from utils.dict_utils import check_dictionary
 
@@ -19,7 +29,7 @@ check_dictionary(word='babysitter',
 ```
 ### Test the method
 If you want to try out the lexical gender detection, run the `lexical_gender.py` script with the `--test` argument
-and optional arguments that change the model parameters.
+and optional arguments that contain the model parameters.
 ```commandline
 python3 code/lexical_gender.py --test [--heur] [--n_words N_WORDS] [--s_pairs S_PAIRS] [--n_defs N_DEFS]
 ```
