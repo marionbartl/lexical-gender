@@ -76,7 +76,7 @@ The output of the script is divided into three sections:
 python3 code/lexical_gender_evaluation.py
 ```
 
-<br/><br/>
+
 
 Shield: [![CC BY 4.0][cc-by-shield]][cc-by]
 
