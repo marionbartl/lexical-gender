@@ -174,10 +174,25 @@ if __name__ == '__main__':
 
     if args.test:  # TEST EVALUATION
 
-        test_words = ['contraceptives', 'babysitter', 'fire fighter']
+        test_words = ['contraceptive', 'babysitter', 'fire fighter']
+        online_dicts = {'merriam': {'fullname': 'Merriam Webster'},
+                        'wordnet': {'fullname': 'Wordnet'},
+                        'dictcom': {'fullname': 'Dictionary.com'}}
 
         for test_word in test_words:
-            print(check_dictionary(test_word, 'mw', ))
+            print('Test word:', test_word)
+            labels = []
+            for dict, info in online_dicts.items():
+                label = check_dictionary(test_word, dict,
+                                         heuristics=args.heur,
+                                         seed_pairs=args.s_pairs,
+                                         no_words=args.n_words,
+                                         no_defs=args.n_defs)
+                print(info['fullname']+'-label:', label)
+                labels.append(label)
+
+            print('combined label:', conflict_resolution_3(labels[0], labels[1], labels[2]))
+            print()
 
     elif args.wiki:  # FINDING WORDS WITH LEXICAL GENDER IN WIKIPEDIA CORPUS
         st = time.time()

@@ -25,11 +25,6 @@ data <- read.csv("lexical_gender_femmasc_wiki1000_majority.csv") %>%
   mutate(dc_label = as.factor(dc_label)) %>%
   mutate(comb_label = as.factor(comb_label)) 
 
-conflicts = c('fellow', 'master', 'ram', 'suitor')
-
-data <- data %>%
-  filter(!word %in% conflicts)
-
 summary(data)
 
 data %>% group_by(tag) %>%
