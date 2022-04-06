@@ -71,7 +71,7 @@ The extracted nouns are saved in the file specified after the `--file` argument.
 python3 code/lexical_gender.py --wiki data/wikicorpus1000.json --file results/gendered_nouns_wiki1000.csv
 ```
 
-Then, the extracted are filtered to only keep those for which any of the dictionary definitions resulted in 
+Then, the extracted nouns are filtered to only keep those for which any of the dictionary definitions resulted in 
 a masculine or feminine label. 
 The filtered list of nouns, **Wiki1000-sample**, is saved in `data/gendered_nouns_wiki1000_sample.csv`.
 
