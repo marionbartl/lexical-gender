@@ -2,7 +2,24 @@
 We present the code associated with our paper 
 "Inferring Gender: A Scalable Methodology for Gender Detection with Online Lexical Databases", which was 
 accepted for publication at the Second Workshop on Language Technology for Equality, Diversity, Inclusion (LT-EDI-2022)
-at the ACL Conference 2022 in Dublin. BibTeX citation to follow. 
+at the ACL Conference 2022 in Dublin. 
+
+```
+@inproceedings{bartl-leavy-2022-inferring,
+    title = "Inferring Gender: A Scalable Methodology for Gender Detection with Online Lexical Databases",
+    author = "Bartl, Marion  and
+      Leavy, Susan",
+    booktitle = "Proceedings of the Second Workshop on Language Technology for Equality, Diversity and Inclusion",
+    month = may,
+    year = "2022",
+    address = "Dublin, Ireland",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2022.ltedi-1.7",
+    pages = "47--58",
+    abstract = "This paper presents a new method for automatic detection of gendered terms in large-scale language datasets. Currently, the evaluation of gender bias in natural language processing relies on the use of manually compiled lexicons of gendered expressions, such as pronouns and words that imply gender. However, manual compilation of lists with lexical gender can lead to static information if lists are not periodically updated and often involve value judgements by individual annotators and researchers. Moreover, terms not included in the lexicons fall out of the range of analysis.To address these issues, we devised a scalable dictionary-based method to automatically detect lexical gender that can provide a dynamic, up-to-date analysis with high coverage. Our approach reaches over 80{\%} accuracy in determining the lexical gender of words retrieved randomly from a Wikipedia sample and when testing on a list of gendered words used in previous research.",
+}
+
+```
 
 ## The Basics
 ### The basic function
